@@ -17,12 +17,7 @@
 package com.example.android.architecture.blueprints.todoapp.tasks
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -34,7 +29,6 @@ import com.example.android.architecture.blueprints.todoapp.data.Task
 import com.example.android.architecture.blueprints.todoapp.databinding.TasksFragBinding
 import com.example.android.architecture.blueprints.todoapp.util.setupRefreshLayout
 import com.example.android.architecture.blueprints.todoapp.util.setupSnackbar
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import timber.log.Timber
 
@@ -92,7 +86,6 @@ class TasksFragment : Fragment() {
         setupListAdapter()
         setupRefreshLayout(viewDataBinding.refreshLayout, viewDataBinding.tasksList)
         setupNavigation()
-        setupFab()
     }
 
     private fun setupNavigation() {
@@ -130,26 +123,18 @@ class TasksFragment : Fragment() {
         }
     }
 
-    private fun setupFab() {
-        activity?.findViewById<FloatingActionButton>(R.id.add_task_fab)?.let {
-            it.setOnClickListener {
-                navigateToAddNewTask()
-            }
-        }
-    }
-
     private fun navigateToAddNewTask() {
         val action = TasksFragmentDirections
             .actionTasksFragmentToAddEditTaskFragment(
                 null,
                 resources.getString(R.string.add_task)
             )
-        findNavController().navigate(action)
+        this.findNavController().navigate(action)
     }
 
     private fun openTaskDetails(taskId: String) {
         val action = TasksFragmentDirections.actionTasksFragmentToTaskDetailFragment(taskId)
-        findNavController().navigate(action)
+        this.findNavController().navigate(action)
     }
 
     private fun setupListAdapter() {

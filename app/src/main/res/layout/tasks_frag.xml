@@ -47,7 +47,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clickable="true"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:focusable="true">
 
                 <LinearLayout
                     android:id="@+id/tasks_linear_layout"
@@ -72,8 +73,8 @@
                         android:id="@+id/tasks_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        app:items="@{viewmodel.items}" />
+                        app:items="@{viewmodel.items}"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -110,6 +111,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
             android:src="@drawable/ic_add"
+            android:onClick="@{() -> viewmodel.addNewTask()}"
+            android:visibility="@{viewmodel.tasksAddViewVisible ? View.VISIBLE : View.GONE}"
             app:fabSize="normal"
             app:layout_anchor="@id/refresh_layout"
             app:layout_anchorGravity="bottom|right|end" />
