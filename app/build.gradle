@@ -72,6 +72,9 @@ dependencies {
     // classpath.
     implementation "androidx.test.espresso:espresso-idling-resource:$espressoVersion"
     androidTestImplementation "androidx.test.espresso:espresso-idling-resource:$espressoVersion"
+    // Testing code should not be included in the main code.
+    // Once https://issuetracker.google.com/128612536 is fixed this can be fixed.
+    debugImplementation "androidx.fragment:fragment-testing:$fragmentKtxVersion"
 
     // Add the following for InstantTaskExecutorRule class. https://stackoverflow.com/a/56073388
     testImplementation 'androidx.arch.core:core-testing:2.1.0'
