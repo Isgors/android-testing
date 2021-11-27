@@ -1,29 +1,42 @@
 package com.example.android.architecture.blueprints.todoapp.tasks
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.example.android.architecture.blueprints.todoapp.data.Task
+import com.example.android.architecture.blueprints.todoapp.data.source.FakeTestRepository
 import getOrAwaitValue
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 
-@RunWith(AndroidJUnit4::class)
 class TasksViewModelTest {
 
     // Subject under test
     private lateinit var tasksViewModel: TasksViewModel
 
+    private lateinit var tasksRepository: FakeTestRepository
+
     // Executes each task synchronously using Architecture Components.
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
+    @ExperimentalCoroutinesApi
     @Before
-    fun setupViewModel() {
-        tasksViewModel = TasksViewModel(ApplicationProvider.getApplicationContext())
+    fun setupViewModel() = runBlockingTest {
+        tasksRepository = FakeTestRepository()
+        val tasks = listOf(
+            Task("Title1", "Description1"),
+            Task("Title2", "Description2", true),
+            Task("Title3", "Description3", true)
+        )
+        for (task in tasks) {
+            tasksRepository.saveTask(task)
+        }
+
+        tasksViewModel = TasksViewModel(tasksRepository)
     }
 
     @Test
