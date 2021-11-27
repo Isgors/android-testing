@@ -13,12 +13,24 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.toString()
     }
 
+    android {
+        sourceSets {
+            String sharedTestDir = 'src/sharedTest/java'
+            test {
+                java.srcDir sharedTestDir
+            }
+            androidTest {
+                java.srcDir sharedTestDir
+            }
+        }
+    }
 
     buildTypes {
         release {
@@ -27,14 +39,33 @@ android {
         }
     }
 
-    buildFeatures {
-        dataBinding true
+    // Always show the result of every unit test, even if it passes.
+    testOptions {
+        animationsDisabled = true
+        unitTests {
+            includeAndroidResources = true
+            all {
+                testLogging {
+                    events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+                }
+            }
+        }
+    }
+
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
+    }
+
+    dataBinding {
+        enabled = true
+        enabledForTests = true
     }
 }
 
 dependencies {
 
     // App dependencies
+    implementation 'com.android.support:multidex:2.0.1'
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
     implementation "androidx.cardview:cardview:$cardVersion"
     implementation "com.google.android.material:material:$materialVersion"
