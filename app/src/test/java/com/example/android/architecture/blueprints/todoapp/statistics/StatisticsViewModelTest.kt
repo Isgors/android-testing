@@ -44,4 +44,13 @@ class StatisticsViewModelTest {
 
     }
 
+    @Test
+    fun loadStatsWhenTasksAreUnavailable_callErrorToDisplay() {
+        tasksRepository.setReturnError(true)
+        statisticsViewModel.refresh()
+
+        assertThat(statisticsViewModel.empty.getOrAwaitValue(), `is`(true))
+        assertThat(statisticsViewModel.error.getOrAwaitValue(), `is`(true))
+    }
+
 }
