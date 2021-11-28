@@ -6,6 +6,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
+import com.example.android.architecture.blueprints.todoapp.MainCoroutineRule
 import com.example.android.architecture.blueprints.todoapp.R
 import com.example.android.architecture.blueprints.todoapp.ServiceLocator
 import com.example.android.architecture.blueprints.todoapp.data.Task
@@ -16,6 +17,7 @@ import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.core.IsNot.not
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -26,6 +28,9 @@ class TaskDetailFragmentTest {
 
     private lateinit var repository : ITasksRepository
 
+    @get:Rule
+    var mainCoroutineRule = MainCoroutineRule()
+
     @Before
     fun initRepository() {
         repository = FakeTestRepository()
@@ -33,12 +38,12 @@ class TaskDetailFragmentTest {
     }
 
     @After
-    fun cleanUp() = runBlockingTest {
+    fun cleanUp() = mainCoroutineRule.runBlockingTest {
         ServiceLocator.resetRepository()
     }
 
     @Test
-    fun activeTaskDetails_DisplayedInUi() = runBlockingTest {
+    fun activeTaskDetails_DisplayedInUi() = mainCoroutineRule.runBlockingTest {
         // GIVEN - Add active (incomplete) task to the DB
         val activeTask = Task("Active Task", "Active Task Description", false)
         repository.saveTask(activeTask)
@@ -59,7 +64,7 @@ class TaskDetailFragmentTest {
     }
 
     @Test
-    fun completedTaskDetails_DisplayedInUi() = runBlockingTest {
+    fun completedTaskDetails_DisplayedInUi() = mainCoroutineRule.runBlockingTest {
         // GIVEN - Add completed task to the DB
         val completedTask = Task("Completed Task", "Completed Task Description", true)
         repository.saveTask(completedTask)

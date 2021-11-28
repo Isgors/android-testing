@@ -1,5 +1,6 @@
 package com.example.android.architecture.blueprints.todoapp.data.source
 
+import com.example.android.architecture.blueprints.todoapp.MainCoroutineRule
 import com.example.android.architecture.blueprints.todoapp.data.Result
 import com.example.android.architecture.blueprints.todoapp.data.Task
 import kotlinx.coroutines.Dispatchers
@@ -8,8 +9,10 @@ import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.IsEqual
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
+@ExperimentalCoroutinesApi
 class DefaultTasksRepositoryTest {
 
     private lateinit var tasksRepository : DefaultTasksRepository
@@ -25,6 +28,8 @@ class DefaultTasksRepositoryTest {
     private val localTasks = listOf(task3).sortedBy { it.id }
     private val newTasks = listOf(task4).sortedBy { it.id }
 
+    @get:Rule
+    var mainCoroutineRule = MainCoroutineRule()
 
     @Before
     fun createRepository() {
@@ -34,13 +39,13 @@ class DefaultTasksRepositoryTest {
         tasksRepository = DefaultTasksRepository(
             tasksRemoteDataSource,
             tasksLocalDataSource,
-            Dispatchers.Unconfined
+            Dispatchers.Main
         )
     }
 
     @ExperimentalCoroutinesApi
     @Test
-    fun getTasks_requestsAllTasksFromRemoteDataSource() = runBlockingTest {
+    fun getTasks_requestsAllTasksFromRemoteDataSource() = mainCoroutineRule.runBlockingTest {
         // When tasks are requested from the tasks repository
         val tasks = tasksRepository.getTasks(true) as Result.Success
         // Then tasks are loaded from the remote data source

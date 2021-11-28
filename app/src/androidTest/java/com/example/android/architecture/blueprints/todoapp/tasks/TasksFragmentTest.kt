@@ -13,6 +13,7 @@ import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
+import com.example.android.architecture.blueprints.todoapp.MainCoroutineRule
 import com.example.android.architecture.blueprints.todoapp.R
 import com.example.android.architecture.blueprints.todoapp.ServiceLocator
 import com.example.android.architecture.blueprints.todoapp.data.Task
@@ -22,6 +23,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.mock
@@ -40,13 +42,16 @@ class TasksFragmentTest {
         ServiceLocator.tasksRepository = repository
     }
 
+    @get:Rule
+    var mainCoroutineRule = MainCoroutineRule()
+
     @After
     fun cleanupDb() = runBlockingTest {
         ServiceLocator.resetRepository()
     }
 
     @Test
-    fun clickTask_navigateToDetailFragmentOne() = runBlockingTest {
+    fun clickTask_navigateToDetailFragmentOne() = mainCoroutineRule.runBlockingTest {
 
         // GIVEN - On the home screen
         repository.saveTask(Task("TITLE1", "DESCRIPTION1", false, "id1"))

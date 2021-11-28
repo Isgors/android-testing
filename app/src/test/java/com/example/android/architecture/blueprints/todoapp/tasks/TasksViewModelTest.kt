@@ -2,6 +2,7 @@ package com.example.android.architecture.blueprints.todoapp.tasks
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.android.architecture.blueprints.todoapp.Event
+import com.example.android.architecture.blueprints.todoapp.MainCoroutineRule
 import com.example.android.architecture.blueprints.todoapp.R
 import com.example.android.architecture.blueprints.todoapp.data.Task
 import com.example.android.architecture.blueprints.todoapp.source.FakeTestRepository
@@ -27,25 +28,15 @@ class TasksViewModelTest {
 
     private lateinit var tasksRepository: FakeTestRepository
 
-    private val testDispatcher = TestCoroutineDispatcher()
-
     // Executes each task synchronously using Architecture Components.
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
-    @Before
-    fun setupDispatcher() {
-        Dispatchers.setMain(testDispatcher)
-    }
-
-    @After
-    fun teardownDispatcher() {
-        Dispatchers.resetMain()
-        testDispatcher.cleanupTestCoroutines()
-    }
+    @get:Rule
+    var mainCoroutineRule = MainCoroutineRule()
 
     @Before
-    fun setupViewModel() = runBlockingTest {
+    fun setupViewModel() = mainCoroutineRule.runBlockingTest {
         tasksRepository = FakeTestRepository()
         val tasks = listOf(
             Task("Title1", "Description1"),
@@ -78,7 +69,7 @@ class TasksViewModelTest {
     }
 
     @Test
-    fun completeTask_dataAndSnackbarUpdated() = runBlockingTest {
+    fun completeTask_dataAndSnackbarUpdated() = mainCoroutineRule.runBlockingTest {
         // Create an active task and add it to the repository.
         val task = Task("Title", "Description")
         tasksRepository.saveTask(task)
