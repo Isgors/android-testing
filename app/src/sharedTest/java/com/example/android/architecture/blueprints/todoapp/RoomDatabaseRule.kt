@@ -15,6 +15,7 @@ class RoomDatabaseRule<T : RoomDatabase>(private val modelClass: Class<T>) : Tes
         database = Room.inMemoryDatabaseBuilder(
             ApplicationProvider.getApplicationContext(),
             modelClass)
+            .allowMainThreadQueries()
             .build()
     }
 
